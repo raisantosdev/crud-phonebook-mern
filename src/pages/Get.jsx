@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Axios from "axios";
-import "../App.css";
+import "./Get.css";
 
 function Get() {
   const [phonebook, setPhonebook] = useState([]);
   const [name, setName] = useState();
   const [phone, setPhone] = useState();
+
+  const refreshGetPage = () => {
+    window.location.reload();
+  };
 
   useEffect(() => {
     Axios.get("http://localhost:8080/get-phone").then((res) => {
@@ -25,11 +29,11 @@ function Get() {
 
   return (
     <div>
-      <div className="home__headerLeft">
+      <div className="header">
         <Link to="/"> Home</Link>
         <Link to="/post"> Post</Link>
       </div>
-      <div>
+      <div className="get__page">
         <div className="container">
           <h1>PhoneBook List</h1>
           {phonebook.map((val, key) => {
@@ -59,7 +63,14 @@ function Get() {
                 <button
                   className="update-btn"
                   onClick={() => {
-                    updatePhone(val._id, nameToUpdate);
+                    if (
+                      window.confirm(
+                        "Tem certeza que deseja atualizar esse registro?"
+                      )
+                    ) {
+                      updatePhone(val._id, nameToUpdate);
+                      refreshGetPage();
+                    }
                   }}
                 >
                   Update
@@ -67,7 +78,14 @@ function Get() {
                 <button
                   className="delete-btn"
                   onClick={() => {
-                    deletePhone(val._id);
+                    if (
+                      window.confirm(
+                        "Tem certeza que deseja apagar esse registro?"
+                      )
+                    ) {
+                      deletePhone(val._id);
+                      refreshGetPage();
+                    }
                   }}
                 >
                   Delete
